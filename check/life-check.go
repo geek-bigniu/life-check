@@ -24,6 +24,7 @@ func NewLifeCheck(target []string, timeout int, threadNum int, outFile *os.File)
 		value := os.Getenv(proxy)
 		if value != "" {
 			logrus.Warnf("代理环境下检测可能不准确 - > %s is set to %s\n", proxy, value)
+			time.Sleep(3 * time.Second)
 			break
 		}
 	}
@@ -39,6 +40,7 @@ func (l *LifeCheck) Run() {
 		go l.Job(target)
 	}
 	l.wg.Wait()
+	logrus.Infof("检测完毕,保存文件名称:" + l.OutFile.Name())
 
 }
 func (l *LifeCheck) Job(jobInfo string) {
